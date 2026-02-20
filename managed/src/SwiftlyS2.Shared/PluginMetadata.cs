@@ -13,4 +13,10 @@ public class PluginMetadata : Attribute
     public string Description { get; set; } = "No further description.";
     public string Website { get; set; } = string.Empty;
     public string MinimumAPIVersion { get; set; } = "0.0.0";
+
+    /// <summary>
+    /// Controls plugin load order. Lower values load first. Default is 1000.
+    /// Use values below 1000 for plugins that need to load early (e.g. plugin managers, core APIs).
+    /// </summary>
+    public int LoadPriority { get; set; } = 1000;
 }
