@@ -546,36 +546,12 @@ void SwiftlyCore::SendConsoleMessage(const std::string& message)
 
 std::string SwiftlyCore::GetCurrentGame()
 {
-    auto engine = g_ifaceService.FetchInterface<IVEngineServer2>(INTERFACEVERSION_VENGINESERVER);
-    if (!engine)
-    {
-        return "unknown";
-    }
-
-    switch (engine->GetAppID())
-    {
-    case 730:
-        return "cs2";
-    default:
-        return "unknown";
-    }
+    return "cs2";
 }
 
 int SwiftlyCore::GetMaxGameClients()
 {
-    auto engine = g_ifaceService.FetchInterface<IVEngineServer2>(INTERFACEVERSION_VENGINESERVER);
-    if (!engine)
-    {
-        return 0;
-    }
-
-    switch (engine->GetAppID())
-    {
-    case 730:
-        return 64;
-    default:
-        return 0;
-    }
+    return 64;
 }
 
 std::string& SwiftlyCore::GetCorePath()
