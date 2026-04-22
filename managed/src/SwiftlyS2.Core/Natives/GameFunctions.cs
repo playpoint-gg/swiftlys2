@@ -73,33 +73,47 @@ internal static class GameFunctions
         CheckPtr((nint)ptr, name);
     }
 
+    private static unsafe void* FetchSig(string name)
+    {
+        try
+        {
+            var addr = (void*)NativeSignatures.Fetch(name);
+            if (addr == null)
+                AnsiConsole.MarkupLine($"[red][[SwiftlyS2.GameFunctions]][/] sig '[yellow]{name}[/]' -> [red]NULL[/] (missing in gamedata or pattern not found)");
+            else
+                AnsiConsole.MarkupLine($"[grey][[SwiftlyS2.GameFunctions]][/] sig '{name}' -> 0x{(nint)addr:X}");
+            return addr;
+        }
+        catch (Exception e)
+        {
+            AnsiConsole.MarkupLine($"[red][[SwiftlyS2.GameFunctions]][/] sig fetch '{name}' threw: {e.Message.Replace("[", "[[").Replace("]", "]]")}");
+            return null;
+        }
+    }
+
     public static void Initialize()
     {
         unsafe
         {
-            pCTakeDamageInfo_Constructor = (delegate* unmanaged< CTakeDamageInfo*, nint, nint, nint, Vector*, Vector*, float, int, int, void*, void >)NativeSignatures.Fetch("CTakeDamageInfo::Constructor");
-            pTakeDamage = (delegate* unmanaged< nint, CTakeDamageInfo*, CTakeDamageResult*, void >)NativeSignatures.Fetch("CBaseEntity::TakeDamage");
-            pTraceShape = (delegate* unmanaged< nint, Ray_t*, Vector*, Vector*, CTraceFilter*, CGameTrace*, void >)NativeSignatures.Fetch("TraceShape");
-            pTracePlayerBBox = (delegate* unmanaged< Vector*, Vector*, BBox_t*, CTraceFilter*, CGameTrace*, void >)NativeSignatures.Fetch("TracePlayerBBox");
-            pSetModel = (delegate* unmanaged< nint, IntPtr, nint >)NativeSignatures.Fetch("CBaseModelEntity::SetModel");
-            pSetPlayerControllerPawn = (delegate* unmanaged< nint, nint, byte, byte, byte, byte, void >)NativeSignatures.Fetch("CBasePlayerController::SetPawn");
-            pSetOrAddAttribute = (delegate* unmanaged< nint, IntPtr, float, void >)NativeSignatures.Fetch("CAttributeList::SetOrAddAttributeValueByName");
-            pGetWeaponCSDataFromKey = (delegate* unmanaged< int, nint, nint >)NativeSignatures.Fetch("GetWeaponCSDataFromKey");
-            pDispatchParticleEffect = (delegate* unmanaged< nint, uint, nint, byte, CUtlSymbolLarge, byte, int, nint, nint, void >)NativeSignatures.Fetch("DispatchParticleEffect");
-            pCSmokeGrenadeProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, int, nint >)NativeSignatures.Fetch("CSmokeGrenadeProjectile::EmitGrenade");
-            pCFlashbangProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, nint >)NativeSignatures.Fetch("CFlashbangProjectile::EmitGrenade");
-            pCHEGrenadeProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, nint >)NativeSignatures.Fetch("CHEGrenadeProjectile::EmitGrenade");
-            pCDecoyProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, nint >)NativeSignatures.Fetch("CDecoyProjectile::EmitGrenade");
-            pCMolotovProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, nint >)NativeSignatures.Fetch("CMolotovProjectile::EmitGrenade");
-            pSwitchTeam = (delegate* unmanaged< nint, int, void >)NativeSignatures.Fetch("CCSPlayerController::SwitchTeam");
+            pCTakeDamageInfo_Constructor = (delegate* unmanaged< CTakeDamageInfo*, nint, nint, nint, Vector*, Vector*, float, int, int, void*, void >)FetchSig("CTakeDamageInfo::Constructor");
+            pTakeDamage = (delegate* unmanaged< nint, CTakeDamageInfo*, CTakeDamageResult*, void >)FetchSig("CBaseEntity::TakeDamage");
+            pTraceShape = (delegate* unmanaged< nint, Ray_t*, Vector*, Vector*, CTraceFilter*, CGameTrace*, void >)FetchSig("TraceShape");
+            pTracePlayerBBox = (delegate* unmanaged< Vector*, Vector*, BBox_t*, CTraceFilter*, CGameTrace*, void >)FetchSig("TracePlayerBBox");
+            pSetModel = (delegate* unmanaged< nint, IntPtr, nint >)FetchSig("CBaseModelEntity::SetModel");
+            pSetPlayerControllerPawn = (delegate* unmanaged< nint, nint, byte, byte, byte, byte, void >)FetchSig("CBasePlayerController::SetPawn");
+            pSetOrAddAttribute = (delegate* unmanaged< nint, IntPtr, float, void >)FetchSig("CAttributeList::SetOrAddAttributeValueByName");
+            pGetWeaponCSDataFromKey = (delegate* unmanaged< int, nint, nint >)FetchSig("GetWeaponCSDataFromKey");
+            pDispatchParticleEffect = (delegate* unmanaged< nint, uint, nint, byte, CUtlSymbolLarge, byte, int, nint, nint, void >)FetchSig("DispatchParticleEffect");
+            pCSmokeGrenadeProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, int, nint >)FetchSig("CSmokeGrenadeProjectile::EmitGrenade");
+            pCFlashbangProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, nint >)FetchSig("CFlashbangProjectile::EmitGrenade");
+            pCHEGrenadeProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, nint >)FetchSig("CHEGrenadeProjectile::EmitGrenade");
+            pCDecoyProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, nint >)FetchSig("CDecoyProjectile::EmitGrenade");
+            pCMolotovProjectileEmitGrenade = (delegate* unmanaged< Vector*, QAngle*, Vector*, Vector*, nint, uint, nint >)FetchSig("CMolotovProjectile::EmitGrenade");
+            pSwitchTeam = (delegate* unmanaged< nint, int, void >)FetchSig("CCSPlayerController::SwitchTeam");
             if (IsWindows)
-            {
-                pTerminateRoundWindows = (delegate* unmanaged< nint, float, uint, nint, void >)NativeSignatures.Fetch("CGameRules::TerminateRound");
-            }
+                pTerminateRoundWindows = (delegate* unmanaged< nint, float, uint, nint, void >)FetchSig("CGameRules::TerminateRound");
             else
-            {
-                pTerminateRoundLinux = (delegate* unmanaged< nint, uint, nint, float, void >)NativeSignatures.Fetch("CGameRules::TerminateRound");
-            }
+                pTerminateRoundLinux = (delegate* unmanaged< nint, uint, nint, float, void >)FetchSig("CGameRules::TerminateRound");
         }
     }
 
@@ -130,10 +144,12 @@ internal static class GameFunctions
             {
                 if (IsWindows)
                 {
+                    if (pTerminateRoundWindows == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pTerminateRoundWindows is NULL -- skipping call (sig/offset failed at init)"); return; }
                     pTerminateRoundWindows(gameRules, delay, reason, teamId > 0 ? (nint)(&teamId) : 0);
                 }
                 else
                 {
+                    if (pTerminateRoundLinux == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pTerminateRoundLinux is NULL -- skipping call (sig/offset failed at init)"); return; }
                     pTerminateRoundLinux(gameRules, reason, teamId > 0 ? (nint)(&teamId) : 0, delay);
                 }
             }
@@ -169,6 +185,7 @@ internal static class GameFunctions
             {
                 return StringAlloc.CreateCString(key, pKey =>
                 {
+                    if (pGetWeaponCSDataFromKey == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pGetWeaponCSDataFromKey is NULL -- skipping call (sig/offset failed at init)"); return 0; }
                     return pGetWeaponCSDataFromKey(unknown, pKey);
                 });
             }
@@ -241,6 +258,7 @@ internal static class GameFunctions
             CheckPtr(pController, nameof(pController));
             unsafe
             {
+                if (pSetPlayerControllerPawn == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pSetPlayerControllerPawn is NULL -- skipping call (sig/offset failed at init)"); return; }
                 pSetPlayerControllerPawn(pController, pPawn, (byte)(b1 ? 1 : 0), (byte)(b2 ? 1 : 0), (byte)(b3 ? 1 : 0), (byte)(b4 ? 1 : 0));
             }
         }
@@ -260,6 +278,7 @@ internal static class GameFunctions
             {
                 unsafe
                 {
+                    if (pSetModel == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pSetModel is NULL -- skipping SetModel call (sig/offset failed at init)"); return; }
                     _ = pSetModel(pEntity, pModel);
                 }
             });
@@ -283,6 +302,7 @@ internal static class GameFunctions
             unsafe
             {
                 var pTeleport = (delegate* unmanaged< nint, Vector*, QAngle*, Vector*, void >)GetVirtualFunction(pEntity, TeleportOffset);
+                if (pTeleport == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pTeleport is NULL -- skipping call (sig/offset failed at init)"); return; }
                 pTeleport(pEntity, vecPosition, vecAngle, vecVelocity);
             }
         }
@@ -307,6 +327,7 @@ internal static class GameFunctions
             CheckPtr(pTrace, nameof(pTrace));
             unsafe
             {
+                if (pTracePlayerBBox == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pTracePlayerBBox is NULL -- skipping call (sig/offset failed at init)"); return; }
                 // FUCK ALL OF YOU SHIT
                 if (IsWindows || Is16Aligned(pTrace))
                 {
@@ -344,6 +365,7 @@ internal static class GameFunctions
             {
                 CheckPtr(pEngineTrace, nameof(pEngineTrace));
                 CheckPtr(pTrace, nameof(pTrace));
+                if (pTraceShape == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pTraceShape is NULL -- skipping call (sig/offset failed at init)"); return; }
                 // FUCK YOU WINDOWS
                 if (IsWindows || Is16Aligned(pTrace))
                 {
@@ -385,6 +407,7 @@ internal static class GameFunctions
             unsafe
             {
                 CheckPtr(pThis, nameof(pThis));
+                if (pCTakeDamageInfo_Constructor == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pCTakeDamageInfo_Constructor is NULL -- skipping call (sig/offset failed at init)"); return; }
                 pCTakeDamageInfo_Constructor(pThis, pInflictor, pAttacker, pAbility, vecDamageForce, vecDamagePosition, flDamage, bitsDamageType, iCustomDamage, a10);
             }
         }
@@ -434,6 +457,7 @@ internal static class GameFunctions
             CheckPtr(pEntity, nameof(pEntity));
             unsafe
             {
+                if (pTakeDamage == null) { AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pTakeDamage is NULL -- skipping call (sig/offset failed at init)"); return; }
                 pTakeDamage(pEntity, info, (CTakeDamageResult*)0);
             }
         }
@@ -564,6 +588,11 @@ internal static class GameFunctions
                 CheckPtr(handle, nameof(handle));
                 StringAlloc.CreateCString(name, pName =>
                 {
+                    if (pSetOrAddAttribute == null)
+                    {
+                        AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pSetOrAddAttribute is NULL -- skipping call (sig/offset failed at init)");
+                        return;
+                    }
                     pSetOrAddAttribute(handle, (nint)pName, value);
                 });
             }
@@ -614,6 +643,11 @@ internal static class GameFunctions
         {
             unsafe
             {
+                if (pCSmokeGrenadeProjectileEmitGrenade == null)
+                {
+                    AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pCSmokeGrenadeProjectileEmitGrenade is NULL -- skipping call (sig/offset failed at init)");
+                    return 0;
+                }
                 return pCSmokeGrenadeProjectileEmitGrenade(&pos, &angle, &velocity, &velocity, owner, itemdefindex, (int)team);
             }
         }
@@ -630,6 +664,11 @@ internal static class GameFunctions
         {
             unsafe
             {
+                if (pCFlashbangProjectileEmitGrenade == null)
+                {
+                    AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pCFlashbangProjectileEmitGrenade is NULL -- skipping call (sig/offset failed at init)");
+                    return 0;
+                }
                 return pCFlashbangProjectileEmitGrenade(&pos, &angle, &velocity, &velocity, owner, itemdefindex);
             }
         }
@@ -646,6 +685,11 @@ internal static class GameFunctions
         {
             unsafe
             {
+                if (pCHEGrenadeProjectileEmitGrenade == null)
+                {
+                    AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pCHEGrenadeProjectileEmitGrenade is NULL -- skipping call (sig/offset failed at init)");
+                    return 0;
+                }
                 return pCHEGrenadeProjectileEmitGrenade(&pos, &angle, &velocity, &velocity, owner, itemdefindex);
             }
         }
@@ -662,6 +706,11 @@ internal static class GameFunctions
         {
             unsafe
             {
+                if (pCDecoyProjectileEmitGrenade == null)
+                {
+                    AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pCDecoyProjectileEmitGrenade is NULL -- skipping call (sig/offset failed at init)");
+                    return 0;
+                }
                 return pCDecoyProjectileEmitGrenade(&pos, &angle, &velocity, &velocity, owner, itemdefindex);
             }
         }
@@ -678,6 +727,11 @@ internal static class GameFunctions
         {
             unsafe
             {
+                if (pCMolotovProjectileEmitGrenade == null)
+                {
+                    AnsiConsole.MarkupLine("[red][[SwiftlyS2.GameFunctions]][/] pCMolotovProjectileEmitGrenade is NULL -- skipping call (sig/offset failed at init)");
+                    return 0;
+                }
                 return pCMolotovProjectileEmitGrenade(&pos, &angle, &velocity, &velocity, owner, itemdefindex);
             }
         }
