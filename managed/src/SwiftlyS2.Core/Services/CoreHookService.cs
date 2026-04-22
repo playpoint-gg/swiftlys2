@@ -120,6 +120,7 @@ internal class CoreHookService : IDisposable
     {
         var address = core.GameData.GetSignature("CEntityIdentity::AcceptInput");
 
+        if (address == 0) { logger.LogWarning("Skipping hook 'CEntityIdentity::AcceptInput' — signature not found in gamedata"); return; }
         logger.LogInformation("Hooking CEntityIdentity::AcceptInput at {Address:X}", address);
 
         entityIdentityAcceptInput = core.Memory.GetUnmanagedFunctionByAddress<CEntityIdentityAcceptInput>(address);
@@ -167,6 +168,7 @@ internal class CoreHookService : IDisposable
     {
         var address = core.GameData.GetSignature("CEntityIOOutput::FireOutputInternal");
 
+        if (address == 0) { logger.LogWarning("Skipping hook 'CEntityIOOutput::FireOutputInternal' — signature not found in gamedata"); return; }
         logger.LogInformation("Hooking CEntityIOOutput_FireOutputInternal at {Address:X}", address);
 
         entityIOOutputFireOutputInternal = core.Memory.GetUnmanagedFunctionByAddress<CEntityIOOutputFireOutputInternal>(address);
@@ -209,6 +211,7 @@ internal class CoreHookService : IDisposable
     {
         var address = core.GameData.GetSignature("Cmd_ExecuteCommand");
 
+        if (address == 0) { logger.LogWarning("Skipping hook 'Cmd_ExecuteCommand' — signature not found in gamedata"); return; }
         logger.LogInformation("Hooking Cmd_ExecuteCommand at {Address:X}", address);
 
         executeCommand = core.Memory.GetUnmanagedFunctionByAddress<ExecuteCommand>(address);
@@ -244,6 +247,7 @@ internal class CoreHookService : IDisposable
     private void HookWeaponServicesDropWeapon()
     {
         var sig = core.GameData.GetSignature("CCSPlayer_WeaponServices::DropWeapon");
+        if (sig == 0) { logger.LogWarning("Skipping hook 'CCSPlayer_WeaponServices::DropWeapon' — signature not found in gamedata"); return; }
         if (IsWindows)
         {
             dropWeaponWindows = core.Memory.GetUnmanagedFunctionByAddress<DropWeaponWindows>(sig);
@@ -353,6 +357,7 @@ internal class CoreHookService : IDisposable
     {
         var address = core.GameData.GetSignature("CCSPlayer_ItemServices::CanAcquire");
 
+        if (address == 0) { logger.LogWarning("Skipping hook 'CCSPlayer_ItemServices::CanAcquire' — signature not found in gamedata"); return; }
         logger.LogInformation("Hooking CCSPlayer_ItemServices::CanAcquire at {Address:X}", address);
 
         itemServicesCanAcquire = core.Memory.GetUnmanagedFunctionByAddress<CCSPlayerItemServicesCanAcquire>(address);
@@ -526,6 +531,7 @@ internal class CoreHookService : IDisposable
     {
         var address = core.GameData.GetSignature("CCSPlayerPawn::PostThink");
 
+        if (address == 0) { logger.LogWarning("Skipping hook 'CCSPlayerPawn::PostThink' — signature not found in gamedata"); return; }
         logger.LogInformation("Hooking CCSPlayerPawn::PostThink at {Address:X}", address);
 
         playerPawnPostThink = core.Memory.GetUnmanagedFunctionByAddress<CCSPlayerPawnPostThink>(address);
@@ -548,6 +554,7 @@ internal class CoreHookService : IDisposable
     private void HookDispatchDatamapFunction()
     {
         var address = core.GameData.GetSignature("DispatchDatamapFunction");
+        if (address == 0) { logger.LogWarning("Skipping hook 'DispatchDatamapFunction' — signature not found in gamedata"); return; }
         dispatchDatamapFunction = core.Memory.GetUnmanagedFunctionByAddress<DispatchDatamapFunction>(address);
         dispatchDatamapFunctionGuid = dispatchDatamapFunction.AddHook(next =>
         {
