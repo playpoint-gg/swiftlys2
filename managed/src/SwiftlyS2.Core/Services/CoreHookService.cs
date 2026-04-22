@@ -75,6 +75,7 @@ internal class CoreHookService : IDisposable
     {
         var address = core.GameData.GetSignature("Cmd_ExecuteCommand");
 
+        if (address == 0) { logger.LogWarning("Skipping hook 'Cmd_ExecuteCommand' — signature not found in gamedata"); return; }
         logger.LogInformation("Hooking Cmd_ExecuteCommand at {Address:X}", address);
 
         executeCommand = core.Memory.GetUnmanagedFunctionByAddress<ExecuteCommand>(address);
@@ -218,6 +219,7 @@ internal class CoreHookService : IDisposable
     internal void HookDispatchDatamapFunction()
     {
         var address = core.GameData.GetSignature("DispatchDatamapFunction");
+        if (address == 0) { logger.LogWarning("Skipping hook 'DispatchDatamapFunction' — signature not found in gamedata"); return; }
         dispatchDatamapFunction = core.Memory.GetUnmanagedFunctionByAddress<DispatchDatamapFunction>(address);
         dispatchDatamapFunctionGuid = dispatchDatamapFunction.AddHook(next =>
         {
